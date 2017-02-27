@@ -116,8 +116,32 @@ typealias LTMorphingSkipFramesClosure =
             return super.font
         }
         set {
-            super.font = newValue
-            setNeedsLayout()
+            guard font != newValue else { return }
+            
+            let attributedText = NSAttributedString(string: self.text,
+                                                    attributes: [
+                                                        NSFontAttributeName : font,
+                                                        NSForegroundColorAttributeName : textColor
+                ])
+            
+            self.attributedText = attributedText
+        }
+    }
+    
+    override open var textColor: UIColor! {
+        get {
+            return super.textColor
+        }
+        set {
+            guard textColor != newValue else { return }
+            
+            let attributedText = NSAttributedString(string: self.text,
+                                                    attributes: [
+                                                        NSFontAttributeName : font,
+                                                        NSForegroundColorAttributeName : textColor
+                ])
+            
+            self.attributedText = attributedText
         }
     }
     
@@ -309,6 +333,9 @@ extension LTMorphingLabel {
     fileprivate func rectsOfEachAttributedCharacter(_ attributedText: NSAttributedString) -> [CGRect] {
         let string = attributedText.string as CFString
         let length = attributedText.length
+        
+        guard length > 0 else { return [] }
+        
         let range = CFRangeMake(0, length)
         
         var chars = Array<UniChar>(repeating: 0, count: length)
@@ -328,16 +355,16 @@ extension LTMorphingLabel {
         let framePath = CGPath(rect: frameRect, transform: nil)
         let frame = CTFramesetterCreateFrame(frameSetter, range, framePath, nil)
         
-        let lines = CTFrameGetLines(frame)
-        let lineCount = CFArrayGetCount(lines)
+        let lines = CTFrameGetLines(frame) as! [CTLine]
+        let lineCount = lines.count
         
-        var lineOrigins = Array<CGPoint>(repeating: .zero, count: length)
-        var lineFrames = Array<CGRect>(repeating: .null, count: length)
+        var lineOrigins = Array<CGPoint>(repeating: .zero, count: lineCount)
+        var lineFrames = Array<CGRect>(repeating: .null, count: lineCount)
         
-        CTFrameGetLineOrigins(frame, range, &lineOrigins)
+        CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), &lineOrigins)
         
         for i in 0..<lineCount {
-            let line = CFArrayGetValueAtIndex(lines, i) as! CTLine
+            let line = lines[i]
             
             let lineRange = CTLineGetStringRange(line)
             let lineStartIndex = lineRange.location
@@ -539,12 +566,19 @@ extension LTMorphingLabel {
     }
     
     override open func drawText(in rect: CGRect) {
-        if !morphingEnabled || limboOfCharacters().count == 0 {
+        guard morphingEnabled else {
             super.drawText(in: rect)
             return
         }
         
-        for charLimbo in limboOfCharacters() {
+        let limbo = limboOfCharacters()
+        
+        guard !limbo.isEmpty else {
+            super.drawText(in: rect)
+            return
+        }
+        
+        for charLimbo in limbo {
             let charRect = charLimbo.rect
             
             let willAvoidDefaultDrawing: Bool = {
