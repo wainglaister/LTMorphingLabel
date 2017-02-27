@@ -128,7 +128,7 @@ typealias LTMorphingSkipFramesClosure =
         set {
             guard text != newValue else { return }
             
-            let attributedText = NSAttributedString(string: text ?? "",
+            let attributedText = NSAttributedString(string: newValue,
                                                     attributes: [
                                                         NSFontAttributeName : font,
                                                         NSForegroundColorAttributeName : textColor
