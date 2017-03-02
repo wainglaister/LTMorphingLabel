@@ -45,9 +45,9 @@ public enum LTCharacterDiffResult: CustomDebugStringConvertible, Equatable {
         case .delete:
             return "The character is DELETED."
         case .move(let offset):
-            return "The character is MOVED to \(offset)."
+            return "The character is MOVED by \(offset)."
         case .moveAndAdd(let offset):
-            return "The character is MOVED to \(offset) and a new character is ADDED."
+            return "The character is MOVED by \(offset) and a new character is ADDED."
         case .replace:
             return "The character is REPLACED with a new character."
         }

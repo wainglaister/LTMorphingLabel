@@ -13,14 +13,17 @@ class LTDemoViewController : UIViewController, LTMorphingLabelDelegate {
     fileprivate var i = -1
     fileprivate var textArray = [
         "What is design?",
-        "Design", "Design is not just", "what it looks like", "and feels like.",
+        "Design", "Design is not\njust", "what it looks like", "and feels like.",
         "Design", "is how it works.", "- Steve Jobs",
+        "We can also have a few lines\neach of which talks about some stuff\nbut which doesn't go on for too long",
+        "Because we can also talk about punctuation,\nlike this ' and that : and the other &",
+        "Because we can add\n\ncompletely blank lines...",
         "Older people", "sit down and ask,", "'What is it?'",
         "but the boy asks,", "'What can I do with it?'.", "- Steve Jobs",
         "", "Swift", "Objective-C", "iPhone", "iPad", "Mac Mini",
-        "MacBook Pro🔥", "Mac Pro⚡️",
-        "爱老婆",
-        "老婆和女儿"
+        //"MacBook Pro🔥", "Mac Pro⚡️",
+        //"爱老婆",
+        //"老婆和女儿"
     ]
     fileprivate var text: String {
         i = i >= textArray.count - 1 ? 0 : i + 1
@@ -33,7 +36,12 @@ class LTDemoViewController : UIViewController, LTMorphingLabelDelegate {
         label.delegate = self
     }
 
-    @IBOutlet fileprivate var label: LTMorphingLabel!
+    @IBOutlet fileprivate var label: LTMorphingLabel! {
+        didSet {
+            self.label.layer.borderWidth = 1
+            self.label.layer.borderColor = UIColor.yellow.cgColor
+        }
+    }
     
     @IBAction func changeText(_ sender: AnyObject) {
         label.text = text

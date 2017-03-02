@@ -29,7 +29,10 @@ import UIKit
 
 public struct LTCharacterLimbo: CustomDebugStringConvertible {
     
+    public let incoming: Bool
     public let char: Character
+    public let glyph: CGGlyph
+    public let lineOffset: CGFloat
     public var rect: CGRect
     public var alpha: CGFloat
     public var size: CGFloat
