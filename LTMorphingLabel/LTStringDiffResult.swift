@@ -41,7 +41,9 @@ public extension NSAttributedString {
         var fitRange = CFRange()
         let fitSize = CTFramesetterSuggestFrameSizeWithConstraints(frameSetter, range, nil, size, &fitRange)
         
-        let frameRect = CGRect(origin: .zero, size: fitSize)
+        let maxSize = CGSize(width: max(size.width, fitSize.width), height: max(size.height, fitSize.height))
+        
+        let frameRect = CGRect(origin: .zero, size: maxSize)
         let framePath = CGPath(rect: frameRect, transform: nil)
         let frame = CTFramesetterCreateFrame(frameSetter, range, framePath, nil)
         

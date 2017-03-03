@@ -124,7 +124,7 @@ typealias LTMorphingSkipFramesClosure =
             
             let attributedText = NSAttributedString(string: self.text,
                                                     attributes: [
-                                                        NSFontAttributeName : font,
+                                                        NSFontAttributeName : newValue,
                                                         NSForegroundColorAttributeName : textColor
                 ])
             
@@ -146,7 +146,7 @@ typealias LTMorphingSkipFramesClosure =
             let attributedText = NSAttributedString(string: self.text,
                                                     attributes: [
                                                         NSFontAttributeName : font,
-                                                        NSForegroundColorAttributeName : textColor
+                                                        NSForegroundColorAttributeName : newValue
                 ])
             
             self.attributedText = attributedText
@@ -297,6 +297,8 @@ extension LTMorphingLabel {
         
         let (_, frame, lines) = attributedText.framesetterInfo(inSize: bounds.size)
         let lineCount = lines.count
+        
+        guard lineCount > 0 else { return [] }
         
         var lineOrigins = Array<CGPoint>(repeating: .zero, count: lineCount)
         
