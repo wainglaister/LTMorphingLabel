@@ -158,7 +158,7 @@ typealias LTMorphingSkipFramesClosure =
             return super.text
         }
         set {
-            print("set text '\(text!)' -> '\(newValue!)'")
+            print("set text '\(text ?? "")' -> '\(newValue!)'")
             
             guard text != newValue else { return }
             
