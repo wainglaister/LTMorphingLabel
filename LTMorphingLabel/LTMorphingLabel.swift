@@ -117,6 +117,10 @@ typealias LTMorphingSkipFramesClosure =
         }
         set {
             guard font != newValue else { return }
+            guard self.text != nil else {
+                super.font = font
+                return
+            }
             
             let attributedText = NSAttributedString(string: self.text,
                                                     attributes: [
@@ -134,6 +138,10 @@ typealias LTMorphingSkipFramesClosure =
         }
         set {
             guard textColor != newValue else { return }
+            guard self.text != nil else {
+                super.textColor = textColor
+                return
+            }
             
             let attributedText = NSAttributedString(string: self.text,
                                                     attributes: [
