@@ -29,7 +29,7 @@ import UIKit
 
 extension LTMorphingLabel {
     
-    func PixelateLoad() {
+    @objc func PixelateLoad() {
         
         effectClosures["Pixelate\(LTMorphingPhases.disappear)"] = {
             char, index, progress in
@@ -87,9 +87,9 @@ extension LTMorphingLabel {
                 height: charLimbo.rect.size.height
             )
             String(charLimbo.char).draw(in: rect, withAttributes: [
-                NSFontAttributeName:
+                NSAttributedStringKey.font:
                     self.font,
-                NSForegroundColorAttributeName:
+                NSAttributedStringKey.foregroundColor:
                     self.textColor.withAlphaComponent(fadeOutAlpha)
                 ])
             let newImage = UIGraphicsGetImageFromCurrentImageContext()

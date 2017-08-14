@@ -53,7 +53,7 @@ enum LTMorphingPhases: Int {
 }
 
 typealias LTMorphingStartClosure =
-    (Void) -> Void
+    () -> Void
 
 typealias LTMorphingEffectClosure =
     (Character, _ index: Int, _ progress: Float) -> LTCharacterLimbo
@@ -65,7 +65,7 @@ typealias LTMorphingManipulateProgressClosure =
     (_ index: Int, _ progress: Float, _ isNewChar: Bool) -> Float
 
 typealias LTMorphingSkipFramesClosure =
-    (Void) -> Int
+    () -> Int
 
 @objc public protocol LTMorphingLabelDelegate {
     @objc optional func morphingDidStart(_ label: LTMorphingLabel)
@@ -82,7 +82,7 @@ typealias LTMorphingSkipFramesClosure =
     @IBInspectable open var morphingEnabled: Bool = true
 
     @IBOutlet open weak var delegate: LTMorphingLabelDelegate?
-    open var morphingEffect: LTMorphingEffect = .scale
+    @objc open var morphingEffect: LTMorphingEffect = .scale
     
     var startClosures = [String: LTMorphingStartClosure]()
     var effectClosures = [String: LTMorphingEffectClosure]()
@@ -90,22 +90,22 @@ typealias LTMorphingSkipFramesClosure =
     var progressClosures = [String: LTMorphingManipulateProgressClosure]()
     var skipFramesClosures = [String: LTMorphingSkipFramesClosure]()
     var diffResults: LTStringDiffResult?
-    var previousText = ""
+    @objc var previousText = ""
     
-    var currentFrame = 0
-    var totalFrames = 0
-    var totalDelayFrames = 0
+    @objc var currentFrame = 0
+    @objc var totalFrames = 0
+    @objc var totalDelayFrames = 0
     
-    var totalWidth: Float = 0.0
-    var previousRects = [CGRect]()
-    var newRects = [CGRect]()
-    var charHeight: CGFloat = 0.0
-    var skipFramesCount: Int = 0
+    @objc var totalWidth: Float = 0.0
+    @objc var previousRects = [CGRect]()
+    @objc var newRects = [CGRect]()
+    @objc var charHeight: CGFloat = 0.0
+    @objc var skipFramesCount: Int = 0
     
     #if TARGET_INTERFACE_BUILDER
     let presentingInIB = true
     #else
-    let presentingInIB = false
+    @objc let presentingInIB = false
     #endif
     
     override open var font: UIFont! {
@@ -190,7 +190,7 @@ typealias LTMorphingSkipFramesClosure =
         return displayLink
         }()
     
-    lazy var emitterView: LTEmitterView = {
+    @objc lazy var emitterView: LTEmitterView = {
         let emitterView = LTEmitterView(frame: self.bounds)
         self.addSubview(emitterView)
         return emitterView
@@ -200,7 +200,7 @@ typealias LTMorphingSkipFramesClosure =
 // MARK: - Animation extension
 extension LTMorphingLabel {
 
-    func displayFrameTick() {
+    @objc func displayFrameTick() {
         if displayLink.duration > 0.0 && totalFrames == 0 {
             var frameRate = Float(0)
             if #available(iOS 10.0, *) {
@@ -250,16 +250,16 @@ extension LTMorphingLabel {
     
     // Could be enhanced by kerning text:
     // http://stackoverflow.com/questions/21443625/core-text-calculate-letter-frame-in-ios
-    func rectsOfEachCharacter(_ textToDraw: String, withFont font: UIFont) -> [CGRect] {
+    @objc func rectsOfEachCharacter(_ textToDraw: String, withFont font: UIFont) -> [CGRect] {
         var charRects = [CGRect]()
         var leftOffset: CGFloat = 0.0
         
-        charHeight = "Leg".size(attributes: [NSFontAttributeName: font]).height
+        charHeight = "Leg".size(withAttributes: [NSAttributedStringKey.font: font]).height
         
         let topOffset = (bounds.size.height - charHeight) / 2.0
 
         for char in textToDraw.characters {
-            let charSize = String(char).size(attributes: [NSFontAttributeName: font])
+            let charSize = String(char).size(withAttributes: [NSAttributedStringKey.font: font])
             charRects.append(
                 CGRect(
                     origin: CGPoint(
@@ -488,9 +488,9 @@ extension LTMorphingLabel {
             if !willAvoidDefaultDrawing {
                 let s = String(charLimbo.char)
                 s.draw(in: charRect, withAttributes: [
-                    NSFontAttributeName:
+                    NSAttributedStringKey.font:
                         UIFont.init(name: font.fontName, size: charLimbo.size)!,
-                    NSForegroundColorAttributeName:
+                    NSAttributedStringKey.foregroundColor:
                         textColor.withAlphaComponent(charLimbo.alpha)
                     ])
             }

@@ -162,7 +162,7 @@ open class LTEmitterView: UIView {
         return Optional.none
     }
     
-    open func removeAllEmitters() {
+    @objc open func removeAllEmitters() {
         for (_, emitter) in emitters {
             emitter.layer.removeFromSuperlayer()
         }
